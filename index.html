@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Gift Exchange Random Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #d32f2f;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .section h2 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #1b5e20;
+        }
+
+        button.delete-btn {
+            background: #d32f2f;
+            padding: 8px 16px;
+        }
+
+        button.delete-btn:hover {
+            background: #b71c1c;
+        }
+
+        button.generate-btn {
+            background: #d32f2f;
+            font-size: 18px;
+            padding: 15px 40px;
+            display: block;
+            margin: 30px auto;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+        }
+
+        button.generate-btn:hover {
+            background: #b71c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
+        }
+
+        .exchanger-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .exchanger-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .exchanger-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .exchanger-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .restrictions-section {
+            margin-top: 10px;
+        }
+
+        .restrictions-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            font-size: 0.95em;
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            border: 2px solid #2e7d32;
+        }
+
+        .results h2 {
+            color: #1b5e20;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .pairing {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #d32f2f;
+            font-size: 1.1em;
+        }
+
+        .pairing strong {
+            color: #d32f2f;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ef5350;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎄 Christmas Gift Exchange Random Generator 🎁</h1>
+        <p class="subtitle">Organize your Secret Santa with ease!</p>
+
+        <div class="section">
+            <h2>Add Participants</h2>
+            <div class="input-group">
+                <input type="text" id="participantName" placeholder="Enter participant name..." />
+                <button onclick="addParticipant()">Add Participant</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Participants & Restrictions</h2>
+            <div id="participantsList" class="exchanger-list">
+                <div class="empty-state">No participants yet. Add some above!</div>
+            </div>
+        </div>
+
+        <button class="generate-btn" onclick="generatePairs()">🎅 Generate Gift Pairs! 🎅</button>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let participants = [];
+
+        function addParticipant() {
+            const input = document.getElementById('participantName');
+            const name = input.value.trim();
+
+            if (!name) {
+                alert('Please enter a name!');
+                return;
+            }
+
+            if (participants.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+                alert('This participant already exists!');
+                return;
+            }
+
+            participants.push({
+                name: name,
+                restrictions: []
+            });
+
+            input.value = '';
+            renderParticipants();
+        }
+
+        function removeParticipant(index) {
+            const removedName = participants[index].name;
+            participants.splice(index, 1);
+            
+            // Remove this person from all restrictions
+            participants.forEach(p => {
+                p.restrictions = p.restrictions.filter(r => r !== removedName);
+            });
+
+            renderParticipants();
+        }
+
+        function toggleRestriction(giverIndex, receiverName) {
+            const giver = participants[giverIndex];
+            const restrictionIndex = giver.restrictions.indexOf(receiverName);
+
+            if (restrictionIndex === -1) {
+                giver.restrictions.push(receiverName);
+            } else {
+                giver.restrictions.splice(restrictionIndex, 1);
+            }
+        }
+
+        function renderParticipants() {
+            const listContainer = document.getElementById('participantsList');
+
+            if (participants.length === 0) {
+                listContainer.innerHTML = '<div class="empty-state">No participants yet. Add some above!</div>';
+                return;
+            }
+
+            listContainer.innerHTML = participants.map((participant, index) => {
+                const otherParticipants = participants.filter((_, i) => i !== index);
+                
+                return `
+                    <div class="exchanger-item">
+                        <div class="exchanger-header">
+                            <span class="exchanger-name">👤 ${participant.name}</span>
+                            <button class="delete-btn" onclick="removeParticipant(${index})">Remove</button>
+                        </div>
+                        <div class="restrictions-section">
+                            <div class="restrictions-label">Cannot give to:</div>
+                            <div class="checkbox-group">
+                                ${otherParticipants.length > 0 ? otherParticipants.map(other => `
+                                    <div class="checkbox-item">
+                                        <input 
+                                            type="checkbox" 
+                                            id="restriction_${index}_${other.name}"
+                                            ${participant.restrictions.includes(other.name) ? 'checked' : ''}
+                                            onchange="toggleRestriction(${index}, '${other.name}')"
+                                        />
+                                        <label for="restriction_${index}_${other.name}">${other.name}</label>
+                                    </div>
+                                `).join('') : '<span style="color: #999; font-size: 0.9em;">Add more participants to set restrictions</span>'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function generatePairs() {
+            const resultsContainer = document.getElementById('results');
+
+            if (participants.length < 2) {
+                resultsContainer.innerHTML = '<div class="error">You need at least 2 participants!</div>';
+                return;
+            }
+
+            // Try to generate valid pairings
+            const maxAttempts = 1000;
+            let attempts = 0;
+            let validPairing = null;
+
+            while (attempts < maxAttempts && !validPairing) {
+                attempts++;
+                const pairing = tryGeneratePairing();
+                if (pairing) {
+                    validPairing = pairing;
+                    break;
+                }
+            }
+
+            if (validPairing) {
+                resultsContainer.innerHTML = `
+                    <div class="results">
+                        <h2>🎁 Gift Assignments 🎁</h2>
+                        ${validPairing.map(pair => `
+                            <div class="pairing">
+                                <strong>${pair.giver}</strong> gives to → <strong>${pair.receiver}</strong>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                resultsContainer.innerHTML = `
+                    <div class="error">
+                        ❌ Could not generate valid pairings with the current restrictions. 
+                        Please review your restrictions and try again. 
+                        (Attempted ${attempts} times)
+                    </div>
+                `;
+            }
+        }
+
+        function tryGeneratePairing() {
+            // Create a shuffled list of receivers
+            const receivers = [...participants.map(p => p.name)];
+            shuffleArray(receivers);
+
+            const pairings = [];
+
+            for (let i = 0; i < participants.length; i++) {
+                const giver = participants[i];
+                let assigned = false;
+
+                // Try to assign a receiver
+                for (let j = 0; j < receivers.length; j++) {
+                    const receiver = receivers[j];
+
+                    // Check if this is a valid assignment
+                    if (receiver !== giver.name && !giver.restrictions.includes(receiver)) {
+                        pairings.push({
+                            giver: giver.name,
+                            receiver: receiver
+                        });
+                        receivers.splice(j, 1);
+                        assigned = true;
+                        break;
+                    }
+                }
+
+                if (!assigned) {
+                    return null; // Failed to create valid pairing
+                }
+            }
+
+            return pairings;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Allow adding participants with Enter key
+        document.getElementById('participantName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addParticipant();
+            }
+        });
+    </script>
+</body>
+</html>
