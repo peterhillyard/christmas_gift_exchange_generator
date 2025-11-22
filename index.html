@@ -217,6 +217,145 @@
             padding: 20px;
             font-style: italic;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 8px;
+            }
+
+            .subtitle {
+                font-size: 0.95em;
+                margin-bottom: 20px;
+            }
+
+            .section {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .section h2 {
+                font-size: 1.2em;
+                margin-bottom: 12px;
+            }
+
+            .input-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            input[type="text"] {
+                width: 100%;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            button {
+                width: 100%;
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+
+            button.delete-btn {
+                width: auto;
+                min-width: 80px;
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            button.generate-btn {
+                width: 100%;
+                font-size: 16px;
+                padding: 15px 20px;
+                margin: 20px auto;
+            }
+
+            .exchanger-item {
+                padding: 12px;
+            }
+
+            .exchanger-header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .exchanger-name {
+                font-size: 1em;
+                flex: 1;
+                min-width: 150px;
+            }
+
+            .checkbox-group {
+                gap: 8px;
+            }
+
+            .checkbox-item {
+                padding: 6px 10px;
+                font-size: 0.9em;
+            }
+
+            .checkbox-item label {
+                font-size: 0.9em;
+            }
+
+            .results {
+                padding: 15px;
+            }
+
+            .results h2 {
+                font-size: 1.3em;
+                margin-bottom: 15px;
+            }
+
+            .pairing {
+                padding: 12px;
+                font-size: 0.95em;
+                word-wrap: break-word;
+            }
+
+            .error {
+                padding: 12px;
+                font-size: 0.95em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .section {
+                padding: 12px;
+            }
+
+            .exchanger-name {
+                font-size: 0.95em;
+                min-width: 120px;
+            }
+
+            .checkbox-item {
+                padding: 5px 8px;
+                font-size: 0.85em;
+            }
+
+            .pairing {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+        }
     </style>
 </head>
 <body>
